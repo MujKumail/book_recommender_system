@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact - Book Recommender</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .custom-navbar {
+            background: linear-gradient(90deg, #00a65a, #008d4c);
+            border: none;
+            padding: 10px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .navbar-nav > li > a {
+            color: white !important;
+        }
+
+        .contact-box {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            margin-top: 50px;
+        }
+
+        .form-control {
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .btn-custom {
+            background-color: #00a65a;
+            color: white;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #008d4c;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .developer-info {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #bbbbbb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar custom-navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">📚 Book Recommender</a>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">Home</a></li>
+                <li><a href="/recommend">Recommend</a></li>
+                <li class="active"><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- CONTACT SECTION -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+
+                <div class="contact-box text-center">
+                    <h1>Contact Me</h1>
+
+                    <form action="/send_message" method="POST">
+                        <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                        <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                        <textarea name="message" class="form-control" rows="4" placeholder="Your Message" required></textarea>
+                        <button type="submit" class="btn btn-custom btn-block">Send Message</button>
+                    </form>
+
+                    {% if success %}
+                    <p style="color:lightgreen; margin-top:15px;">
+                        Message sent successfully ✅
+                    </p>
+
+                    {% endif %}
+                    <div class="developer-info">
+                        <p>Developed by <strong>Kumail Mujtaba</strong></p>
+                        <p>Email: 110syedkumail@gmail.com</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

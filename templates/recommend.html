@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Recommender System</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ===== NAVBAR ===== */
+        .custom-navbar {
+            background: linear-gradient(90deg, #00a65a, #008d4c);
+            border: none;
+            padding: 10px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .navbar-nav > li > a {
+            color: white !important;
+            transition: 0.3s ease;
+        }
+
+        .navbar-nav > li > a:hover {
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 20px;
+        }
+
+        /* ===== BOOK CARD ===== */
+        .book-card {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 420px;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .book-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+        }
+
+        .book-img {
+            height: 250px;
+            width: auto;
+            max-width: 100%;
+            display: block;
+            margin: 15px auto;
+            object-fit: contain;
+        }
+
+        .book-body {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .book-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            min-height: 40px;
+        }
+
+        .book-author {
+            font-size: 13px;
+            color: #bbbbbb;
+        }
+
+        /* ===== SEARCH FORM ===== */
+        .search-box {
+            margin: 30px 0;
+        }
+
+        .form-control {
+            border-radius: 20px;
+            height: 45px;
+        }
+
+        .btn-custom {
+            background-color: #00a65a !important;
+            color: white !important;
+            border-radius: 20px;
+            padding: 8px 25px;
+            border: none !important;
+        }
+
+
+        .btn-custom:hover,
+        .btn-custom:focus,
+        .btn-custom:active {
+            background-color: #008d4c !important;
+            color: white !important;
+        }
+.btn-orange {
+    background-color: #ff8800 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-orange:hover {
+    background-color: #e67600 !important;
+}
+
+
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        /* Fix typing text color inside Select2 search box */
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            background-color: #1e1e1e;
+            color: white !important;
+            border: 1px solid #333;
+        }
+
+        /* Fix selected text color */
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            ]color: white !important;
+        }
+
+        /* Fix arrow color visibility */
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: white transparent transparent transparent;
+        }
+
+        .select2-container--default .select2-selection--single {
+            background-color: #1e1e1e;
+            border: none;
+            height: 45px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .select2-dropdown {
+            background-color: #1e1e1e;
+            color: white;
+        }
+
+        .select2-results__option {
+            color: white;
+        }
+
+        .select2-results__option--highlighted {
+            background-color: #00a65a !important;
+        }
+
+        .glyphicon-spin {
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar custom-navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">📚 Book Recommender</a>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/recommend">Recommend</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12 text-center">
+                <h1>Recommend Books</h1>
+
+                <form action="/recommend_books" method="post">
+                    <select name="user_input"
+                            id="book-select"
+                            class="form-control"
+                            required>
+
+                        <option value=""></option>
+
+                        {% for book in book_list %}
+                        <option value="{{ book }}"
+                                {% if selected_book == book %} selected {% endif %}>
+                            {{ book }}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                    <br>
+                    <br>
+
+                    <button type="submit"
+                            id="recommend-btn"
+                            class="btn btn-lg
+                            {% if data %} btn-orange {% else %} btn-custom {% endif %}">
+                        <span id="btn-text">
+                            {% if data %} Recommended {% else %} Recommend {% endif %}
+                        </span>
+                        <span id="btn-spinner" style="display:none;">
+                            <i class="glyphicon glyphicon-refresh glyphicon-spin"></i>
+                            Loading...
+                        </span>
+                    </button>
+
+
+                    <br>
+                </form>
+
+                {% if error %}
+                <div class="alert alert-danger" style="margin-top:20px;">
+
+                    {{ error }}
+
+
+                    {% if suggestions %}
+
+                    <br><br>
+
+                    <strong>Did you mean:</strong>
+                    <ul style="list-style:none; padding-left:0;">
+                        {% for s in suggestions %}
+                        <li>
+                            <a href="#" onclick="fillInput('{{ s }}')" style="color:#00a65a;">
+                                {{ s }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+            </div>
+
+            {% if data %}
+                {% for i in data %}
+                    <div class="col-md-3" style="margin-top:30px;">
+                        <div class="book-card">
+
+                            <img class="book-img"
+                                 src="{{ i[2] if i[2] else 'https://via.placeholder.com/150x220?text=No+Image' }}">
+
+                            <div class="book-body">
+                                <div class="book-title">
+                                    {{ i[0][:45] }}{% if i[0]|length > 45 %}...{% endif %}
+                                </div>
+
+                                <div class="book-author">
+                                    {{ i[1] }}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#book-select').select2({
+        placeholder: "Search for a book...",
+        width: '100%'
+    });
+});
+</script>
+<script>
+$('#book-select').on('change', function() {
+    const btn = document.getElementById("recommend-btn");
+
+    // Remove orange class
+    btn.classList.remove("btn-orange");
+
+    // Add green class back
+    btn.classList.add("btn-custom");
+
+    // Change text back
+    document.getElementById("btn-text").innerText = "Recommend";
+});
+</script>
+
+<script>
+document.querySelector("form").addEventListener("submit", function() {
+    // Disable button
+    const btn = document.getElementById("recommend-btn");
+    btn.disabled = true;
+    btn.style.opacity = "0.7";
+    // Hide text
+    document.getElementById("btn-text").style.display = "none";
+    // Show spinner
+    document.getElementById("btn-spinner").style.display = "inline";
+});
+</script>
+
+</body>
+</html>
